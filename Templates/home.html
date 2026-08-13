@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>YouTube Converter</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="page-header">
+                <h1 class="page-title">YouTube to Media converter</h1>
+            </header>
+            <main class="content">
+                <section class="converter-card">
+                    <form class="converter-form" action="/" method="POST">
+                        <label class="form-label" for="youtube-url">YouTube URL</label>
+                        <input
+                            class="form-input"
+                            id="youtubeUrl"
+                            type="text"
+                            name="url"
+                            placeholder="Enter YouTube URL"
+                        >
+                        <button class="form-button" type="submit">Get Information</button>
+                    </form>
+
+                    {% if error %}
+                    <div class="message message--error">
+                        <p>{{ error }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if thumbnail %}
+                    <div class="thumbnail-preview">
+                        <img class="thumbnail-image" src="{{ thumbnail }}" alt="Video Thumbnail" width="320">
+                    </div>
+                    {% endif %}
+
+                    {% if title %}
+                    <section class="video-info">
+                        <h2 class="video-info__heading">Video Information</h2>
+                        <ul class="video-info__list">
+                            <li class="video-info__item"><strong>Title:</strong> {{ title }}</li>
+                            <li class="video-info__item"><strong>Duration:</strong> {{ duration }}</li>
+                            <li class="video-info__item"><strong>Uploader:</strong> {{ uploader }}</li>
+                            <li class="video-info__item"><strong>Views:</strong> {{ views }}</li>
+                        </ul>
+                    </section>
+
+                    <section class="conversion-card">
+                        <h3 class="conversion-card__heading">Conversion</h3>
+                        <div class="conversion-card__buttons">
+                            <a href="{{ url_for('formats', url=url) }}">
+                                <button id="mp3Button" class="conversion-button conversion-button--mp3" type="button">Convert</button>
+                            </a>
+                        </div>
+                    </section>
+                    {% endif %}
+                </section>
+            </main>
+        </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </body>
+</html>

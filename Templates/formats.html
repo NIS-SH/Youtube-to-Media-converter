@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Formats</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="page-header">
+                <h1 class="page-title">Available Formats</h1>
+            </header>
+            <main class="content">
+                {% if video_formats %}
+                <section class="formats-card">
+                    <h2 class="formats-heading">VIDEO</h2>
+                    <ul class="formats-list">
+                        {% for format in video_formats %}
+                        <li class="formats-list__item">
+                            <strong>Resolution:</strong> {{ format.resolution }} | 
+                            <strong>Filesize:</strong> {{ format.filesize }} |
+                            {{ format.ext }} 
+                            <form action="/downloads" method="POST">
+                                <input type="hidden" name="url" value="{{ url }}">
+                                <input type="hidden" name="format_id" value="{{ format.format_id }}">
+
+                                <button type="submit" class="download-button">Download</button>
+                            </form>
+                            
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% else %}
+                <div class="message message--info">
+                    <p>No formats available.</p>
+                </div>
+                {% endif %}
+                
+                {% if audio_formats %}
+                <section class="formats-card">
+                    <h2 class="formats-heading">AUDIO</h2>
+                    <ul class="formats-list">
+                        {% for format in audio_formats %}
+                        <li class="formats-list__item">
+                            <strong>Bitrate:</strong> {{ format.bitrate }} kbps | 
+                            <strong>Filesize:</strong> {{ format.audiosize }} |
+                            {{ format.ext }}
+                            <form action="/downloads" method="POST">
+                                <input type="hidden" name="url" value="{{ url }}">
+                                <input type="hidden" name="format_id" value="{{ format.format_id }}">
+
+                                <button type="submit" class="download-button">Download</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% else %}
+                <div class="message message--info">
+                    <p>No formats available.</p>
+                </div>
+                {% endif %}
+            </main>
+        </div>
+    </body>
+</html>
