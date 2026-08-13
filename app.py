@@ -5,7 +5,6 @@ from pathlib import Path
 import os
 import subprocess
 import json
-import yt_dlp
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -25,16 +24,17 @@ def home():
             error = "Please enter a valid YouTube URL."
         else:
             try:
-                info = yt_dlp.YoutubeDL({'quiet': True, 'no_warnings': True, 'noplaylist': True}).extract_info(url, download=False)
-            except Exception as e:
-                print("Error occurred while fetching video info:", e)
+                res = subprocess.run(['yt-dlp', '--dump-single-json', '--no-playlist', url], capture_output=True, text=True, check=True)
+            except subprocess.CalledProcessError as e:
+                print("Error occurred while fetching video info:", e.stderr)
                 exit(1)
+            data = json.loads(res.stdout)
 
-            title = info.get('title')
-            duration = format_duration(info.get('duration'))
-            thumbnail = info.get('thumbnail')
-            uploader = info.get('uploader')
-            views = format_views(info.get('view_count'))
+            title = data.get('title')
+            duration = format_duration(data.get('duration'))
+            thumbnail = data.get('thumbnail')
+            uploader = data.get('uploader')
+            views = format_views(data.get('view_count'))
 
 
         
